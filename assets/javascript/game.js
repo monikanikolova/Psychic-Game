@@ -4,46 +4,54 @@ var computerChoices = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "m
 // Variables that hold the number of wins, losses, guesses left, user guesses
 var wins = 0;
 var losses = 0;
-var guessesLeft = 10;
-var guessChoices = [];
+var guessesRemaining = 10;
+var guessedLetters = [];
 
-//Variables that hold references to the places in the HTML
-
-var directionsText = document.getElementById("directions-txt");
-var winsText = document.getElementById("wins-txt");
-var lossesText = document.getElementById("losses-txt");
-var guessesLeftText = document.getElementById("left-txt");
-var yourGuessesText = document.getElementById("your-guesses");
+function restart() {
+    guessesRemaining = 10;
+    guessedLetters = [];
+}
 
 //Function to be run when user presses a key
-document.onkeyup = function(event) {
+document.onkeyup = function (event) {
+
 
     //Determines which key was pressed
-    var yourGuesses = event.key;
+    var playerGuess = event.key;
+
+    guessedLetters.push(playerGuess);
 
     //Randomly choooses from the array
-    var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+    var computerPick = computerChoices[Math.floor(Math.random() * computerChoices.length)];
 
     //Logic of the game 
-    if (yourGuesses === computerChoices) {
+
+    if (guessedLetters === computerPick) {
         wins++;
-        guessesLeft = 9;
-        guessChoices = [];
+        guessesRemaining--;
+
     }
 
-    if (yourGuesses !== computerChoices) {
-        guessesLeft--;
-        guessChoices = [];
+    if (guessedLetters !== computerPick) {
+        guessesRemaining--;
+        computerChoices.push(guessedLetters);
     }
-
-    if (guessesLeft === 0) {
+    if (guessesRemaining === 0) {
         losses++;
-        guessesLeft = 9;
+        restart();
     }
+    var htmlText = "<p> Guess what letter I'm thinking of...</p>" + "<p>Wins:" + wins + "</p>" + "<p>Losses: " + losses + "</p>" + "<p>Guesses Left: " + guessesRemaining + "</p>" + "<p>Your Guesses so far: " + guessedLetters.join(", ") + "</p>";
 
-    //Display the user and computer guesses with wins and losses
-    winsText.innerHTML = "wins: " + wins;
-    lossesText.innerHTML = "losses: " + losses;
-    guessesLeftText.innerHTML = "guesses left: " + guessesLeft;
-    yourGuessesText.innerHTML = guessChoices;
+    document.getElementById("text").innerHTML = htmlText;
+
 }
+
+
+
+
+
+//Display the user and computer guesses with wins and losses
+// winsText.innerHTML = "Wins: " + wins;
+// lossesText.innerHTML = "Losses: " + losses;
+// guessesLeftText.innerHTML = "Guesses left: " + guessesRemaining;
+// yourGuessesText.innerHTML = guessedLetters;
